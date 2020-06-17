@@ -1,0 +1,325 @@
+body {
+    max-width: 800px;
+    margin: auto;
+
+    font-family: 'Roboto Slab', serif;
+    font-weight: 200;
+}
+p, h1{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+/*Navigation*/
+.nav__container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 30px 100px;
+    grid-template-areas: 
+        "logg_in    disp_opt"
+        "logo       btn__add ";
+    align-items: center;
+}
+.disp-style {
+    grid-area: disp_opt;
+    justify-self: right;
+    font-size: 0.95rem;
+    text-decoration: underline;
+}
+.loggIn {
+    grid-area: logg_in;
+
+}
+.logo {
+    grid-area: logo;
+    font-family: 'Roboto Slab', serif;
+    font-size: 2rem;
+    text-decoration: underline;
+}
+.link__add {
+    grid-area: btn__add;
+    justify-self: center;
+    min-width: 80px;
+    display: grid;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: red;
+    padding: 2px;
+    border: 1px solid red;
+    border-radius: 15px;
+}
+.btn__add {
+    display: none;
+}
+/*Sorting options*/
+.sorting_options__contaier {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 30px 30px;
+    align-items: center;
+}
+.sorting_options__contaier > form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+    justify-content: start;
+    border-bottom: solid 1px darkslategrey;
+}
+.btn__sorting {
+    border-radius: 15px 15px 2px 2px;
+    border: solid 1px darkslategrey;
+    font-size: 1.2rem;
+    font-weight: 400;
+    width: 8rem;
+    width: 160px;
+    margin-bottom: -1px;
+}
+.sorting_options__radio {
+    margin-top: 10px;
+}
+.btn__sort {
+    border-radius: 15px;
+    min-width: 80px;
+    justify-self: right;
+}
+/*TODO List*/
+.list__container {
+    padding: 0;
+    margin-top: 25px;
+}
+.table__content {
+    align-items: center;
+    grid-template-columns: 2fr 4fr 6fr 3fr 3fr 2fr;
+    grid-template-areas: 
+        "done  finish  title  importance   start   .";
+}
+.table__content .done,
+.table__content .finish,
+.table__content .title,
+.table__content .start,
+.table__content .importance {
+    font-weight: 400;
+    font-size: .8rem;
+    background-color: white;
+}
+li {
+    display: grid;
+    grid-template-columns: 2fr 4fr 6fr 3fr 3fr 2fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+        "done       finish    title     importance  start   edit "
+        "descript   descript  descript  descript    descript  descript";
+    align-items: center;
+}
+.id {
+    display: none;
+}
+.done,
+.finish,
+.title,
+.importance,
+.edit,
+.start {
+    background-color: whitesmoke;
+    height: 100%;
+}
+
+.finish,
+.start {
+    background-color: whitesmoke;
+    height: 100%;
+    display: grid;
+    align-items: center;
+}
+.done {
+    grid-area: done;
+    font-size: 1.4rem;
+}
+.finish {
+    grid-area: finish;
+}
+.title {
+    grid-area: title;
+    font-weight: 300;
+}
+.start {
+    grid-area: start;
+}
+.start::before {
+    font-size: 0.8rem;
+    content: 'Start: '
+}
+.finish::before {
+    font-size: 0.8rem;
+    content: 'Dedline: '
+}
+
+.importance {
+    grid-area: importance;
+    font-size: 1.2rem;
+}
+.description {
+    grid-area: descript;
+    background-color: white;
+}
+.edit {
+    grid-area: edit;
+    color: darkblue;
+    text-decoration: underline;
+    font-size: 0.9rem;
+    justify-self: right;
+    background-color: white;
+}
+h1.title {
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+/*Formular Add+ */
+.newTask {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    
+    margin-top: 20px;
+    max-width: 400px;
+}
+.span_task_input_close {
+    font-size: 0.9rem;
+    justify-self: right;
+    grid-column-start: 2;
+}
+.btn_task_input_close {
+    width: 30px;
+}
+.title_span,
+.description_span {
+    display: grid;
+    grid-column: 1 / span 2;
+    grid-template-columns: 1fr 1fr;
+}
+.title_span label,
+.description_span label {
+    grid-column-start: 1;
+}
+.inputTitle,
+.inputDescription {
+    grid-column-start: 2;
+}
+.date_span {
+    grid-column: 1 / span 2;
+    display: grid;
+    grid-template-columns: 1fr,1fr;
+}
+.date_label1{
+    grid-column-start: 1;
+    display:grid;
+}
+.date_label2{
+    grid-column-start: 2;
+    display:grid;
+}
+.inputStart {
+    justify-self: left;
+}
+.stair_rating {
+    grid-column: 1 / span 2;
+}
+.btn_task_input {
+    grid-column: 1 / span 2;
+}
+.rating-star {
+    font-size: 1.6rem;
+}
+.rating-star:hover {
+    font-size: 1.8rem;
+}
+.full {
+    font-size: 2rem;
+}
+.rating-star::before {
+    content: "\2606";
+}
+.full::before {
+    content: "\2605";
+}
+/*@ media querry*/
+
+@media only screen and (max-width: 730px) {
+    .table__content {
+        grid-template-columns: 2fr 4fr 6fr 3fr 3fr;
+        grid-template-areas: 
+            "done  finish  title  importance   start";
+    }
+    li {
+        grid-template-columns: 2fr 4fr 6fr 3fr 3fr;
+        grid-template-areas: 
+            "done       finish    title     importance  start"
+            "descript   descript  descript  descript    edit";
+    }
+    .edit {
+        justify-self: right;
+        align-self: flex-end;
+        background-color: white;
+    }
+    .start, .finish {
+        font-size: 0.9rem;
+    }
+}
+@media only screen and (max-width: 580px) {
+    /*Sorting options*/
+    .btn__sorting {
+        width: 100px;
+    }
+    .sorting_options__radio p,
+    .sorting_options__radio label {
+        font-size: .9rem;
+    }
+    /*TODO List*/
+    .list__container{
+        justify-items: center;
+        margin-top: 0;
+    }
+    li {
+        width: 100vw;
+        display: grid;
+        justify-items: center;
+        margin-top: 25px;
+        grid-template-columns: 1fr 1fr;
+
+        grid-template-areas: 
+            "title title"
+            "importance importance"
+            "done  finish"
+            "done  start"
+            "descript descript"
+            "edit edit";
+    } 
+    .title{
+        width: 100vw;
+        text-align: center;
+    }  
+    .importance{
+        background-color: white;
+    } 
+
+    .done {
+        justify-self: right;
+        padding-right: 40px;
+        background-color: white;
+        display: grid;
+        align-items: center;
+    }
+    .edit
+     {
+        justify-self: center;
+    }
+    .finish,
+    .start {
+        justify-self: left;
+        padding: 5px 20px 0 0;
+        display: inline;
+        background-color: white;
+    }
+
+
+}
+

@@ -1,0 +1,198 @@
+
+:root {
+  --small-text: 0.9em;
+}
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    max-width: 1000px;
+    margin: auto;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+}
+/*Navigation*/
+.nav__container {
+    flex-basis: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.disp-style, .loggIn {
+    flex-basis: 50%;
+    font-size: var(--small-text);
+}
+.disp-style{
+    text-align: right;
+    text-decoration: underline;
+}
+.logo {
+    flex-basis: 100%;
+    font-family: 'Cabin Sketch', cursive;
+    font-size: 4.2em;
+    color: rgb(87, 85, 85);
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 20px;
+    background:
+        linear-gradient(to left, rgba(255,255,255,0.5),rgba(255,255,255,0.9), rgba(255,0255,255,0.5)),
+        repeat-x  center/40% url("./06.jpg");
+    margin: 0px auto 0px auto;
+}
+.link__add{
+    display: none;
+}
+/*Sorting options*/
+.sorting_options__contaier{
+    flex-basis: 100%;
+}
+.sorting_options__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+}
+.btn__sorting, .btn__add{
+    flex-basis: 24.9%;
+    font-size: 1.1em;
+}
+.sorting_options__radio {
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    align-items: baseline;
+}
+.sorting_options__p {
+    flex-basis: 15%;
+}
+.sorting_options__radio label {
+    flex-basis: 20%;
+}
+.btn__sort {
+    flex-basis: 20%;
+    border-radius: 15px;
+    max-width: 80px;
+}
+/*TODO List*/
+.list__container{
+    flex-basis: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 0;
+    list-style-type: none;
+}
+.table__content{
+    display: none;
+}
+li {
+    background-color: darkseagreen;
+    margin: 5px;
+    flex: 1 1 calc(30% - 10px);
+    min-width: 180px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 10px;
+}
+li:last-child {
+    flex: 1 1 calc(30% - 10px);
+}
+.title{   
+    font-size: 1.2em;
+    min-height: 2.8em;
+    margin-bottom: .4em;
+}
+.id {
+    display: none;
+}
+.importance{
+    flex-basis: 100%;
+    text-align: center;
+    margin: 5px auto 5px auto;
+    font-size: 1.1em;
+}
+.description {
+    margin-top: 0;
+}
+li span {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.start,.finish{
+    flex-basis: 100%;
+    font-size: var(--small-text);
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+    align-self: flex-end;
+    margin: 5px auto 5px auto;
+}
+.start::before {
+    content: 'Beginns at: '
+}
+.finish::before {
+    content: 'Ends at: '
+}
+.done {
+    flex-basis: 100%;
+    text-align: center;
+    align-self: flex-end;
+    font-size: 1.8em;
+    margin: 5px auto 5px auto;
+}
+.edit {
+   font-size: var(--small-text);
+   align-self: flex-end;
+   text-decoration: underline;
+}
+/*Footer*/
+footer {
+    max-width: 1200px;
+    margin:auto;
+    font-size: var(--small-text);
+}
+/*Formular Add+ */
+.newTask {
+    display: flex;
+    flex-direction: column;
+}
+.span_task_input_close {
+    font-size: var(--small-text);
+    align-self: flex-end;
+}
+.btn_task_input_close {
+    width: 30px;
+}
+.title_span,
+.description_span {
+    flex-basis: 100%;
+    display: flex;
+}
+.title_span label,
+.description_span label {
+    flex-basis: 30%;
+}
+.inputTitle,
+.inputDescription {
+    flex-basis: 70%;
+}
+.rating-star {
+    font-size: 1.6rem;
+}
+.rating-star:hover {
+    font-size: 1.8rem;
+}
+.full {
+    font-size: 2rem;
+}
+.rating-star::before {
+    content: "\2606";
+}
+.full::before {
+    content: "\2605";
+}
+

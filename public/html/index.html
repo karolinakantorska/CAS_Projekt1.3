@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link class="link_css" rel="stylesheet" href="../css/funny.css">
+    <link 
+        href="https://fonts.googleapis.com/css2?family=Cabin+Sketch:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans" />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@200;300;400;500"
+            rel="stylesheet">
+    <!-- should I install this?-->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js" defer></script> -->
+    <script src="../libs/handlebars-v4.0.5.js" defer></script>
+    <script src="../js/utils/handlebars-helpers.js" defer></script>
+    <script src="../js/controllers/index-controller.js" type="module" defer></script> 
+    <!-- Template to create todo list-->
+    <script id="entry-template" type="text/x-handlebars-template">
+        {{#each this}}
+            <li>
+                <h1 class="title">{{title}}</h1>
+                <p class="id">{{{id}}}</p>
+                <!-- TODO showing stairs not a number -->
+                <p class="importance">Importance:</p>
+                <p class="importance">{{{importance}}}</p>
+                <p class="description">{{description}}</p>
+                <p class="start">{{start}}</p>
+                <p class="finish">{{finish}}</p>
+                <!-- to interprete bolean -->
+                {{#if done}}
+                    <p class="done">&#9745;</p>
+                {{else}}
+                    <p class="done">&#9744;</p>
+                {{/if}}
+                <a class="edit">edit...</a>
+                                                
+            </li>
+        {{/each}}
+    </script>
+    <!-- Template to create input form-->
+    <script id="input-template" type="text/x-handlebars-template">
+        <form class='newTask'>
+            <span class='span_task_input_close'>Delete Note:
+            <input class='btn_task_input_close' type="button" value="&#9747;">
+            </span>
+            <span class="title_span">
+                <label for="title">Task title: </label>
+                <input type="text" name="title" class="inputTitle" required>
+            </span>
+            <span class="description_span">
+                <label for="description">Description: </label>
+                <textarea type="text" name="description" class="inputDescription"></textarea>
+            </span>
+            <span>
+                <input type="radio" class="inputTodo" name="inputTodo" checked>
+                <label>Todo</label>
+                <input type="radio" class="inputDone" name="inputTodo">
+                <label>Done</label>
+            </span>
+            <span class="date_span">
+                <label class="date_label1" for="start">Start date:<input type="date" class="start" name="inputStart"></label>
+                <label class="date_label2" for="finish">Finish date:<input type="date" class="finish"
+                        name="inputFinish"></label>
+            </span>
+            <span class="stair_rating">
+                <label>Importance:</label>
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+            </span>
+            <input class='btn_task_input' type="button" value="Add Task">
+        </form>
+    </script>
+</head>
+<body>
+    <div class="container">
+            <!-- Navigation-->
+            <span class="nav__container">
+                <p class="loggIn">Logg in</p>
+                <p class="disp-style">Display: buisness &#9662</p>
+                <p class="logo"> Todo List</p>
+                <p class="link__add" >Add +</p>
+            </span>
+            <!-- Sorting options-->
+            <span class="sorting_options__contaier">
+                <form class="sorting_options__buttons">
+                    <input class="btn__sorting" id="btn__sorting__done" type="button" value="Done"></input>
+                    <input class="btn__sorting" id="btn__sorting__todo" type="button" value="Todo"></input>
+                    <input class="btn__sorting" id="btn__sorting__all" type="button" value="All"></input>
+                    <input class="btn__add" type="button" value="Add +"></input>
+                </form>
+            
+                <form class="sorting_options__radio">
+                    <p class="sorting_options__p">Sort By:</p>
+                    <label>finish date
+                        <input type="radio" value="finish" name="sort_radio"></input>
+                    </label>
+                    <label>create date
+                        <input type="radio" value="start" name="sort_radio"></input>
+                    </label>
+                    <label>importance
+                        <input type="radio" value="importance" name="sort_radio"></input>
+                    </label>
+                    <input class="btn__sort" type="button" value="Sort"></input>
+                </form>
+            </span>
+            <div class="form__list__container" >
+                <!-- TODO List-->
+                <!-- ADD TODO Form-->
+                <!-- TODO add in css a description for a list -->
+                <!-- TODO whole line in buisness -->
+            </div>
+    </div>
+</body>
+<footer>
+<p>&copy; Karolina Kantorska</p>
+</footer>
+<script src="../js/controller_UI.js" type="module" defer></script>
+</html>
