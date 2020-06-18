@@ -2,6 +2,9 @@
 import { BuisnessLogic} from './shared-bl.js'
 import { NotesStorage } from './notes-storage.js'
 
+import { authService } from './services/auth-service.js'
+import { orderService } from './services/order-service.js'
+
 const notesStorage = new NotesStorage();
 const buisnessLogic = new BuisnessLogic(notesStorage);
 const todoList = notesStorage.getTodoList();
@@ -33,11 +36,28 @@ const todoList = notesStorage.getTodoList();
         ulTodoList.setAttribute('class', 'list__container');
         ulTodoList.innerHTML = template(list);
         ulTodoList.addEventListener('click', (e) => editTask(e));
-        //ASK NOT URGENT why: appContainer.removeChild(appContainer.firstChild) doesn't work
+        //
         const appContainer = document.querySelector('.form__list__container');
         appContainer.innerHTML = '';
         appContainer.appendChild(ulTodoList);
     }
+    
+const appContainer = document.querySelector('.form__list__container');    
+const ordersRenderer = Handlebars.compile(document.querySelector("#entry-template").innerHTML);
+
+async function renderOrders() {
+    appContainer.innerHTML = ordersRenderer({orders: await orderService.getOrders()});
+}
+
+/*
+ordersContainer.addEventListener("click", async function (event) {
+    if(event.target.classList.contains("js-delete")){
+
+        await orderService.deleteOrder(event.target.dataset.id);
+        await renderOrders()
+    }
+});
+    */
     function editTask(){
         const liChildrenNodes = event.target.parentElement.children;
         const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
@@ -74,6 +94,7 @@ const todoList = notesStorage.getTodoList();
         }
         notesStorage.addNewTask(newTask);
     }
+
     function renderForm() {
         //reading the templates
         const templateSourceInput = document.querySelector("#input-template").innerHTML;
@@ -81,15 +102,24 @@ const todoList = notesStorage.getTodoList();
         const templateInput = Handlebars.compile(templateSourceInput);
         const appContainer = document.querySelector('.form__list__container');
         appContainer.innerHTML = templateInput(todoList);
-        const submitBtn = document.querySelector('.btn_task_input');
+        
         const starBtn = document.querySelector('.stair_rating');
         const inputCloseBtn = document.querySelector('.btn_task_input_close');
         inputCloseBtn.addEventListener('click', () => renderTodoList(todoList));
-        //TODO it should be 'submit' not 'click'
-        submitBtn.addEventListener('click', getInput);
-        starBtn.addEventListener('click', handleStairRating);
-        
+        //
+        const submitBtn = document.querySelector('.btn_task_input');
+        const inputTitle = document.querySelector('.inputTitle')
+        // creating a todo
+        submitBtn.addEventListener('click', async event => {
+            event.preventDefault();
+            //console.log(inputTitle.value);
+            await orderService.createPizza(inputTitle.value)
+            renderOrders()
+            inputTitle.value = '';
+        });
+        starBtn.addEventListener('click', handleStairRating); 
     }
+
 function toggleStyle() {
     const cssVariant = document.querySelector('.link_css');
     if (/funny/.test(cssVariant.href)) {

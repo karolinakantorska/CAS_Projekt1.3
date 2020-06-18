@@ -1,4 +1,4 @@
-// dont need this
+
 import { authService } from '../services/auth-service.js'
 import { orderService } from '../services/order-service.js'
 
@@ -13,11 +13,14 @@ const ordersContainer = document.querySelector("#ordersContainer");
 const ordersRenderer = Handlebars.compile(document.querySelector("#orders-template").innerHTML);
 
 // creating a new pizza
+// more or less works
 btnNewPizza.addEventListener("click", async event => {
     event.preventDefault();
     
     await orderService.createPizza(inputPizza.value)
+    // now this:
     renderOrders();
+    
     inputPizza.value = "";    
 });
 
@@ -30,6 +33,7 @@ btnLogout.addEventListener("click", ()  => {
     authService.logout();
     updateStatus();
 });
+
 
 async function renderOrders() {
     ordersContainer.innerHTML = ordersRenderer({orders: await orderService.getOrders()});

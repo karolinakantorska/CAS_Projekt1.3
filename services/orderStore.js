@@ -1,11 +1,12 @@
 import Datastore from 'nedb-promise'
 // goes to controller/ordersController
 export class Order {
-    constructor(pizzaName, orderedBy) {
+    constructor(title, orderedBy) {
         this.orderedBy = orderedBy;
-        this.pizzaName = pizzaName;
+        this.title = title;
+        this.id = 'id' + (new Date()).getTime();
         this.orderDate = new Date();
-        this.state = "OK";
+        //this.state = "OK";
     }
 }
 
@@ -14,8 +15,8 @@ export class OrderStore {
         this.db = db || new Datastore({filename: './data/orders.db', autoload: true});
     }
 
-    async add(pizzaName, orderedBy) {
-        let order = new Order(pizzaName, orderedBy);
+    async add(title, orderedBy) {
+        let order = new Order(title, orderedBy);
         return await this.db.insert(order);
     }
 
