@@ -1,6 +1,6 @@
 import { httpService } from './http-service.js'
 
-class OrderService {    
+class OrderService {
     async createPizza(pizzeName) {
         return await httpService.ajax("POST", "/orders/", { name: pizzeName });
     }

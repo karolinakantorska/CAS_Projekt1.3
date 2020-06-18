@@ -1,14 +1,14 @@
-import {valueStorage} from './value-storage.js'
+import { valueStorage } from './value-storage.js'
 
 const tokenKey = "token";
 
 class HttpService {
     ajax(method, url, data, headers) {
-        const fetchHeaders = new Headers({'content-type': 'application/json', ...(headers || {})});
-        
-        if(valueStorage.getItem(tokenKey)){
-            fetchHeaders.append("authorization", "Bearer "+ valueStorage.getItem(tokenKey))
-        }        
+        const fetchHeaders = new Headers({ 'content-type': 'application/json', ...(headers || {}) });
+
+        if (valueStorage.getItem(tokenKey)) {
+            fetchHeaders.append("authorization", "Bearer " + valueStorage.getItem(tokenKey))
+        }
 
         return fetch(url, {
             method: method,
@@ -18,15 +18,15 @@ class HttpService {
         });
     }
 
-    setAuthToken(token){
+    setAuthToken(token) {
         valueStorage.setItem(tokenKey, token);
     }
 
-    hasAuthToken(){
+    hasAuthToken() {
         return Boolean(valueStorage.getItem(tokenKey))
     }
 
-    removeAuthToken(token){
+    removeAuthToken(token) {
         valueStorage.setItem(tokenKey, undefined);
     }
 

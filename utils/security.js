@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import {userStore} from '../services/userStore';
+import { userStore } from '../services/userStore';
 import util from 'util';
 
 const sign = util.promisify(jwt.sign);
@@ -27,7 +27,7 @@ export class SecurityUtil {
         if (!name) {
             return "";
         }
-        return await sign({name}, secret, options);
+        return await sign({ name }, secret, options);
     }
 
     static async handleLogin(req, res) {

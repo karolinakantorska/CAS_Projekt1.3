@@ -19,7 +19,7 @@
     <script src="../js/controllers/index-controller.js" type="module" defer></script> 
     <!-- Template to create todo list-->
     <script id="entry-template" type="text/x-handlebars-template">
-        {{#each this}}
+        {{#each orders}}
             <li>
                 <h1 class="title">{{title}}</h1>
                 <p class="id">{{{id}}}</p>
@@ -35,8 +35,7 @@
                 {{else}}
                     <p class="done">&#9744;</p>
                 {{/if}}
-                <a class="edit">edit...</a>
-                                                
+                <a class="edit">edit...</a>                            
             </li>
         {{/each}}
     </script>

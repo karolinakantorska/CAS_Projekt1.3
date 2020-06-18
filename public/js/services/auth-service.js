@@ -13,7 +13,7 @@ class AuthService {
 
     isLoggedIn() {
         return httpService.hasAuthToken();
-    }  
+    }
 }
 
 export const authService = new AuthService();

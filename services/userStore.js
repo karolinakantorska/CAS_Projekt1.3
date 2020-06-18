@@ -1,5 +1,5 @@
 import Datastore from 'nedb-promise'
-import {CryptoUtil} from '../utils/cryptoUtil';
+import { CryptoUtil } from '../utils/cryptoUtil';
 
 export class User {
     constructor(email, passwort) {
@@ -10,7 +10,7 @@ export class User {
 
 export class UserStore {
     constructor(db) {
-        this.db = db || new Datastore({filename: './data/user.db', autoload: true});
+        this.db = db || new Datastore({ filename: './data/user.db', autoload: true });
     }
 
     async register(email, passwort) {
@@ -25,7 +25,7 @@ export class UserStore {
         if (!(email && passwort)) {
             return false;
         }
-        let user = await this.db.findOne({email: email});
+        let user = await this.db.findOne({ email: email });
         if (user == null) {
             await this.register(email, passwort, callback);
             return true;

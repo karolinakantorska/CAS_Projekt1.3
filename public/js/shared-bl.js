@@ -1,26 +1,21 @@
-//View
-//View ----onclick----> Controller
-//View <======== Controller
-//Displays the state/data of the mode
-
 export class BuisnessLogic {
     constructor() {
     }
     test() {
         console.log('test')
     }
-    filterDone(list){
+    filterDone(list) {
         return list.filter((task) => task.done);
     }
     filterTodo(list) {
         return list.filter((task) => !task.done);
     }
-    sortingAList(list, sortInput){
+    sortingAList(list, sortInput) {
         let value = ''
         for (const node of sortInput) {
             (node.checked)
                 ? value = node.value
-               : null;
+                : null;
         }
         switch (value) {
             case 'finish':
@@ -37,13 +32,10 @@ export class BuisnessLogic {
                 break;
         }
     }
-    sortTasksBy(list, by){
+    sortTasksBy(list, by) {
         return [...list].sort(function (t1, t2) {
             console.log(new Date(t2[by]))
             return new Date(t2[by]) - new Date(t1[by]);
         });
     }
 }
-
-// export const buisnessLogic = new BuisnessLogic;
-

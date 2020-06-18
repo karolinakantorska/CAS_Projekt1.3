@@ -12,7 +12,7 @@ export class Order {
 
 export class OrderStore {
     constructor(db) {
-        this.db = db || new Datastore({filename: './data/orders.db', autoload: true});
+        this.db = db || new Datastore({ filename: './data/orders.db', autoload: true });
     }
 
     async add(title, orderedBy) {
@@ -21,16 +21,16 @@ export class OrderStore {
     }
 
     async delete(id, currentUser) {
-        await this.db.update({_id: id, orderedBy: currentUser}, {$set: {"state": "DELETED"}});
+        await this.db.update({ _id: id, orderedBy: currentUser }, { $set: { "state": "DELETED" } });
         return await this.get(id);
     }
 
     async get(id, currentUser) {
-        return await this.db.findOne({_id: id, orderedBy : currentUser});
+        return await this.db.findOne({ _id: id, orderedBy: currentUser });
     }
 
     async all(currentUser) {
-        return await this.db.cfind({orderedBy : currentUser}).sort({ orderDate: -1 }).exec();
+        return await this.db.cfind({ orderedBy: currentUser }).sort({ orderDate: -1 }).exec();
     }
 }
 

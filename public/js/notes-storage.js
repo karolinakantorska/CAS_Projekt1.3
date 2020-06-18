@@ -4,11 +4,11 @@
 //Data and business logic for the application
 export class NotesStorage {
     constructor() {
-        const todoList = JSON.parse(localStorage.getItem('todoList')) || []; 
+        const todoList = JSON.parse(localStorage.getItem('todoList')) || [];
         this.todoList = todoList;
         localStorage.setItem('todoList', JSON.stringify(this.todoList));
     }
-    getTodoList(){
+    getTodoList() {
         return this.todoList;
     }
     addNewTask(newTask) {
