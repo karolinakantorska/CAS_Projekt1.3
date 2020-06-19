@@ -7,8 +7,10 @@ import { orderService } from './services/order-service.js'
 const notesStorage = new NotesStorage();
 const buisnessLogic = new BuisnessLogic(notesStorage);
 const todoList = notesStorage.getTodoList();
+const btnLogin = document.querySelector(".logIn");
 
 function initEventListenersInMenu() {
+    btnLogin.addEventListener('click',logToggle);
     document.querySelector('.link__add').addEventListener('click', renderForm);
     document.querySelector('.btn__add').addEventListener('click', renderForm);
     document.querySelector('.disp-style').addEventListener('click', toggleStyle);
@@ -19,7 +21,39 @@ function initEventListenersInMenu() {
     document.querySelector('#btn__sorting__done').addEventListener('click', () => renderTodoList(buisnessLogic.filterDone(todoList)));
     document.querySelector('#btn__sorting__todo').addEventListener('click', () => renderTodoList(buisnessLogic.filterTodo(todoList)));
 }
+// it is not working
+// for sure logg out
+async function logToggle(){
+    if (btnLogin.id === 'logedOut') {
+        btnLogin.innerHTML = 'Log Out';
+        btnLogin.setAttribute('id', 'logedIn');
+        await authService.login("admin@admin.ch", "123456");
+        // true
+        console.log(authService.isLoggedIn())
+        //authService.isLoggedIn();
+    }
+    else {
+        btnLogin.innerHTML = 'Log In';
+        btnLogin.setAttribute('id', 'logedOut');
+        // false
+        console.log(!authService.isLoggedIn())
+        // empty object
+        console.log(authService)
+        authService.logout();
+        //!authService.isLoggedIn();
+    }
+}
+// nie rozumiem tego
+function updateStatus() {
 
+    Array.from(document.querySelectorAll(".js-non-user")).forEach(x => x.classList.toggle("hidden", authService.isLoggedIn()))
+    Array.from(document.querySelectorAll(".js-user")).forEach(x => x.classList.toggle("hidden", !authService.isLoggedIn()))
+    /*
+    if (authService.isLoggedIn()) {
+        renderOrders();
+    }
+    */
+}
 function listSorting() {
     const sortFormHTMLCollection = Array.from(document.querySelector('.sorting_options__radio').children);
     const radioInputs = [];
@@ -47,8 +81,8 @@ function renderTodoList(list) {
 async function renderOrders() {
     // dostalam sie do informacji z serwera
     // TO JEST ARRAY OBIEKTOW [{}, {}, {}]
-    // const order = await orderService.getOrders()
-    // console.log(order)
+     const order = await orderService.getOrders()
+     console.log(order)
 
     const templateSource = document.querySelector("#entry-template").innerHTML;
     const template = Handlebars.compile(templateSource);
@@ -59,8 +93,6 @@ async function renderOrders() {
     const appContainer = document.querySelector('.form__list__container');
     appContainer.innerHTML = '';
     appContainer.appendChild(ulTodoList);
-    // z przykladu:
-    //appContainer.innerHTML = ordersRenderer({ orders: await orderService.getOrders() });
 }
 function editTask() {
     const liChildrenNodes = event.target.parentElement.children;
@@ -74,13 +106,14 @@ function editTask() {
     notesStorage.deleteNodeByID(id);
     controllerAction();
 }
+/*
 function getInput() {
     // input
     const formNewTask = document.querySelector('.newTask');
     const title = document.querySelector('.inputTitle').value;
     const description = document.querySelector('.inputDescription').value;
-    const done = document.querySelector('.inputDone').checked
-    console.log(document.querySelector('.inputDone').checked)
+    const done = document.querySelector('.inputDone').checked;
+    console.log(document.querySelector('.inputDone').checked;
     const start = document.querySelector('.start').value;
     const finish = document.querySelector('.finish').value;
     const importance = document.querySelectorAll('.full').length;
@@ -98,6 +131,7 @@ function getInput() {
     }
     notesStorage.addNewTask(newTask);
 }
+*/
 function renderForm() {
     //reading the templates
     const templateSourceInput = document.querySelector("#input-template").innerHTML;
@@ -109,19 +143,29 @@ function renderForm() {
     const inputCloseBtn = document.querySelector('.btn_task_input_close');
     inputCloseBtn.addEventListener('click', () => renderTodoList(todoList));
     const submitBtn = document.querySelector('.btn_task_input');
-    const inputTitle = document.querySelector('.inputTitle')
+    const inputTitle = document.querySelector('.inputTitle');
+    const inputDescription = document.querySelector('.inputDescription');
+    const inputStart = document.querySelector('.start');
+    const inputFinish = document.querySelector('.finish');
+    const inputDone = document.querySelector('.inputDone').checked;
+    // write it other 
+    starBtn.addEventListener('click', handleStairRating); 
+    const inputImportance = document.querySelectorAll('.full').length;
+
     // creating a todo
     submitBtn.addEventListener('click', async event => {
         event.preventDefault();
-        //console.log(inputTitle.value);
-        await orderService.createPizza(inputTitle.value)
-        renderOrders()
+        console.log(inputTitle.value);
+        console.log(inputDescription.value);
+        console.log(inputStart.value);
+        console.log(inputFinish.value);
+        console.log(inputTitle.value);
+        console.log(inputTitle.value);
+        await orderService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone )
+        renderOrders();
         inputTitle.value = '';
     });
-    starBtn.addEventListener('click', handleStairRating); 
-
 }
-
 function toggleStyle() {
     const cssVariant = document.querySelector('.link_css');
     if (/funny/.test(cssVariant.href)) {
@@ -133,7 +177,6 @@ function toggleStyle() {
         document.querySelector('.disp-style').innerHTML = 'Display: buisness &#9662'
     }
 }
-
 function handleStairRating() {
     function addClassToStars(node) {
         const parentsChildren = node.parentElement.children
@@ -149,5 +192,4 @@ function handleStairRating() {
         ? addClassToStars(event.target)
         : null;
 }
-
 initEventListenersInMenu();

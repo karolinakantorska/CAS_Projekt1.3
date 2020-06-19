@@ -22,7 +22,7 @@
         {{#each orders}}
             <li>
                 <h1 class="title">{{title}}</h1>
-                <p class="id">{{{id}}}</p>
+                <p class="id">{{orderDate}}</p>
                 <!-- TODO showing stairs not a number -->
                 <p class="importance">Importance:</p>
                 <p class="importance">{{{importance}}}</p>
@@ -80,7 +80,7 @@
     <div class="container">
             <!-- Navigation-->
             <span class="nav__container">
-                <p class="loggIn">Logg in</p>
+                <p class="logIn" id = "logedOut">Logg in</p>
                 <p class="disp-style">Display: buisness &#9662</p>
                 <p class="logo"> Todo List</p>
                 <p class="link__add" >Add +</p>

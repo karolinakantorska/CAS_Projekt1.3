@@ -8,7 +8,7 @@ export class OrdersController {
     };
     // where the hell goes this ?
     async createPizza(req, res) {
-        res.json(await orderStore.add(req.body.name, SecurityUtil.currentUser(req)));
+        res.json(await orderStore.add(req.body.name, req.body.description, req.body.start, req.body.finish, req.body.importance, req.body.done, SecurityUtil.currentUser(req)));
     };
 
     async showOrder(req, res) {
