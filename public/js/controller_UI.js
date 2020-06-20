@@ -6,7 +6,7 @@ import { orderService } from './services/order-service.js'
 
 const notesStorage = new NotesStorage();
 const buisnessLogic = new BuisnessLogic(notesStorage);
-const todoList = notesStorage.getTodoList();
+//const todoList = notesStorage.getTodoList();
 const btnLogin = document.querySelector(".logIn");
 
 function initEventListenersInMenu() {
@@ -77,7 +77,9 @@ function renderTodoList(list) {
 // z przykladu:
 //const appContainer = document.querySelector('.form__list__container');
 //const ordersRenderer = Handlebars.compile(document.querySelector("#entry-template").innerHTML);
+async function getTodoList() {
 
+}
 async function renderOrders() {
     // dostalam sie do informacji z serwera
     // TO JEST ARRAY OBIEKTOW [{}, {}, {}]
@@ -88,6 +90,7 @@ async function renderOrders() {
     const template = Handlebars.compile(templateSource);
     const ulTodoList = document.createElement('ul');
     ulTodoList.setAttribute('class', 'list__container');
+    // 
     ulTodoList.innerHTML = template({ orders: await orderService.getOrders() });
     //ulTodoList.addEventListener('click', (e) => editTask(e));
     const appContainer = document.querySelector('.form__list__container');
@@ -139,28 +142,31 @@ function renderForm() {
     const templateInput = Handlebars.compile(templateSourceInput);
     const appContainer = document.querySelector('.form__list__container');
     appContainer.innerHTML = templateInput(todoList);
+
     const starBtn = document.querySelector('.stair_rating');
     const inputCloseBtn = document.querySelector('.btn_task_input_close');
+    // to correct
     inputCloseBtn.addEventListener('click', () => renderTodoList(todoList));
     const submitBtn = document.querySelector('.btn_task_input');
-    const inputTitle = document.querySelector('.inputTitle');
-    const inputDescription = document.querySelector('.inputDescription');
-    const inputStart = document.querySelector('.start');
-    const inputFinish = document.querySelector('.finish');
-    const inputDone = document.querySelector('.inputDone').checked;
-    // write it other 
-    starBtn.addEventListener('click', handleStairRating); 
-    const inputImportance = document.querySelectorAll('.full').length;
+    starBtn.addEventListener('click', handleStairRating);
 
     // creating a todo
     submitBtn.addEventListener('click', async event => {
         event.preventDefault();
+        const inputTitle = document.querySelector('.inputTitle');
+        const inputDescription = document.querySelector('.inputDescription');
+        const inputStart = document.querySelector('.start');
+        const inputFinish = document.querySelector('.finish');
+        const inputDone = document.querySelector('.inputDone').checked;
+        const inputImportance = document.querySelectorAll('.full').length;
+        /*
         console.log(inputTitle.value);
         console.log(inputDescription.value);
         console.log(inputStart.value);
         console.log(inputFinish.value);
-        console.log(inputTitle.value);
-        console.log(inputTitle.value);
+        console.log(inputImportance);
+        console.log(inputDone);
+        */
         await orderService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone )
         renderOrders();
         inputTitle.value = '';
