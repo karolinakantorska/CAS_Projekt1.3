@@ -9,9 +9,7 @@ export class Order {
         this.finish = finish;
         this.importance = importance;
         this.done = done;
-        this.id = 'id' + (new Date()).getTime();
         this.orderDate = new Date();
-        //this.state = "OK";
     }
 }
 

@@ -6,8 +6,6 @@ import { orderService } from './services/order-service.js'
 
 const notesStorage = new NotesStorage();
 const buisnessLogic = new BuisnessLogic(notesStorage);
-// delete it later
-const todoList = notesStorage.getTodoList();
 let actuallyDisplayedList = [];
 const btnLogin = document.querySelector(".logIn");
 
@@ -17,11 +15,11 @@ function initEventListenersInMenu() {
     document.querySelector('.btn__add').addEventListener('click', renderForm);
     document.querySelector('.disp-style').addEventListener('click', toggleStyle);
     document.querySelector('#btn__sorting__all').addEventListener('click', async() => {
+        // TODO Repetition to avoid
         const list = await getTodoList();
         actuallyDisplayedList = list;
         renderOrders(list);
     });
-    //document.querySelector('.btn__sort').addEventListener('click', () => renderOrders(listSorting()));
     document.querySelector('.btn__sort').addEventListener('click', () => {
         console.log(listSorting());
         renderOrders(listSorting());
@@ -37,8 +35,7 @@ function initEventListenersInMenu() {
         renderOrders(buisnessLogic.filterTodo(list));
     });
 }
-// it is not working
-// for sure logg out
+// logg out is not working
 async function logToggle(){
     if (btnLogin.id === 'logedOut') {
         btnLogin.innerHTML = 'Log Out';
@@ -61,7 +58,6 @@ async function logToggle(){
 }
 // nie rozumiem tego
 function updateStatus() {
-
     Array.from(document.querySelectorAll(".js-non-user")).forEach(x => x.classList.toggle("hidden", authService.isLoggedIn()))
     Array.from(document.querySelectorAll(".js-user")).forEach(x => x.classList.toggle("hidden", !authService.isLoggedIn()))
     /*
@@ -77,27 +73,19 @@ function listSorting() {
     return buisnessLogic.sortingAList(actuallyDisplayedList, radioInputs);
 }
 function renderTodoList(list) {
-    //reading the templates
-    //const templateSource = document.querySelector("#entry-template").innerHTML;
-    // compiling template string into template function 
-    //const template = Handlebars.compile(templateSource);
     const ulTodoList = document.createElement('ul');
     ulTodoList.setAttribute('class', 'list__container');
     ulTodoList.innerHTML = template(list);
     ulTodoList.addEventListener('click', (e) => editTask(e));
-
     const appContainer = document.querySelector('.form__list__container');
     appContainer.innerHTML = '';
     appContainer.appendChild(ulTodoList);
 }
-// z przykladu:
-//const appContainer = document.querySelector('.form__list__container');
-//const ordersRenderer = Handlebars.compile(document.querySelector("#entry-template").innerHTML);
 async function getTodoList() {
     const list = await orderService.getOrders();
     return list;
 }
-//async function renderOrders() {
+
  function renderOrders(list) {
     // loguje liste z serwera
     // const order = await orderService.getOrders();
@@ -106,67 +94,44 @@ async function getTodoList() {
     const template = Handlebars.compile(templateSource);
     const ulTodoList = document.createElement('ul');
     ulTodoList.setAttribute('class', 'list__container');
-    // 
     ulTodoList.innerHTML = template(list);
-    //ulTodoList.innerHTML = template(await orderService.getOrders() );
-    //ulTodoList.addEventListener('click', (e) => editTask(e));
+    ulTodoList.addEventListener('click', (e) => editTask(e));
     const appContainer = document.querySelector('.form__list__container');
     appContainer.innerHTML = '';
     appContainer.appendChild(ulTodoList);
 }
-function editTask() {
+async function editTask() {
     const liChildrenNodes = event.target.parentElement.children;
     const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
-    renderForm();
-    const defalutValuesObject = notesStorage.getNodeByID(id)[0];
-    document.querySelector('.inputTitle').setAttribute('value', `${defalutValuesObject.title}`);
-    document.querySelector('.inputDescription').setAttribute('valuet', `${defalutValuesObject.description}`);
+    await renderForm();
+    console.log(document.querySelector('.title'));
+    const defalutValuesObject = await orderService.getOrder(id);
+    console.log(defalutValuesObject);
+    
+    document.querySelector('.title').setAttribute('value', `${defalutValuesObject.title}`);
+    document.querySelector('.description').setAttribute('valuet', `${defalutValuesObject.description}`);
     document.querySelector('.start').setAttribute('value', `${defalutValuesObject.start}`);
     document.querySelector('.finish').setAttribute('value', `${defalutValuesObject.finish}`);
-    notesStorage.deleteNodeByID(id);
+    //notesStorage.deleteNodeByID(id);
     controllerAction();
 }
-/*
-function getInput() {
-    // input
-    const formNewTask = document.querySelector('.newTask');
-    const title = document.querySelector('.inputTitle').value;
-    const description = document.querySelector('.inputDescription').value;
-    const done = document.querySelector('.inputDone').checked;
-    console.log(document.querySelector('.inputDone').checked;
-    const start = document.querySelector('.start').value;
-    const finish = document.querySelector('.finish').value;
-    const importance = document.querySelectorAll('.full').length;
-    // generate id
-    const id = 'id' + (new Date()).getTime();
-    formNewTask.reset();
-    const newTask = {
-        id,
-        title,
-        start,
-        finish,
-        done,
-        description,
-        importance,
-    }
-    notesStorage.addNewTask(newTask);
-}
-*/
-function renderForm() {
+async function renderForm() {
     //reading the templates
     const templateSourceInput = document.querySelector("#input-template").innerHTML;
     // compiling template string into template function
     const templateInput = Handlebars.compile(templateSourceInput);
     const appContainer = document.querySelector('.form__list__container');
-    appContainer.innerHTML = templateInput(todoList);
-
+    appContainer.innerHTML = templateInput();
     const starBtn = document.querySelector('.stair_rating');
     const inputCloseBtn = document.querySelector('.btn_task_input_close');
-    // to correct
-    inputCloseBtn.addEventListener('click', () => renderTodoList(todoList));
+    inputCloseBtn.addEventListener('click', async() => {
+        // TODO Repetition to avoid
+        const list = await getTodoList();
+        actuallyDisplayedList = list;
+        renderOrders(list);
+    });
     const submitBtn = document.querySelector('.btn_task_input');
     starBtn.addEventListener('click', handleStairRating);
-
     // creating a todo
     submitBtn.addEventListener('click', async event => {
         event.preventDefault();
@@ -176,14 +141,7 @@ function renderForm() {
         const inputFinish = document.querySelector('.finish');
         const inputDone = document.querySelector('.inputDone').checked;
         const inputImportance = document.querySelectorAll('.full').length;
-        /*
-        console.log(inputTitle.value);
-        console.log(inputDescription.value);
-        console.log(inputStart.value);
-        console.log(inputFinish.value);
-        console.log(inputImportance);
-        console.log(inputDone);
-        */
+
         await orderService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone )
         let list = await getTodoList();
         actuallyDisplayedList = list;
