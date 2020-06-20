@@ -27,14 +27,14 @@ export class BuisnessLogic {
                 return this.sortTasksBy(list, value);
                 break;
             case 'importance':
-                console.log('importance')
+                console.log(`${value}`)
                 return this.sortTasksBy(list, value);
                 break;
         }
     }
     sortTasksBy(list, by) {
         return [...list].sort(function (t1, t2) {
-            console.log(new Date(t2[by]))
+            //console.log(new Date(t2[by]))
             return new Date(t2[by]) - new Date(t1[by]);
         });
     }

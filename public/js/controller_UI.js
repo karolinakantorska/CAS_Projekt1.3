@@ -6,7 +6,9 @@ import { orderService } from './services/order-service.js'
 
 const notesStorage = new NotesStorage();
 const buisnessLogic = new BuisnessLogic(notesStorage);
-//const todoList = notesStorage.getTodoList();
+// delete it later
+const todoList = notesStorage.getTodoList();
+let actuallyDisplayedList = [];
 const btnLogin = document.querySelector(".logIn");
 
 function initEventListenersInMenu() {
@@ -14,12 +16,26 @@ function initEventListenersInMenu() {
     document.querySelector('.link__add').addEventListener('click', renderForm);
     document.querySelector('.btn__add').addEventListener('click', renderForm);
     document.querySelector('.disp-style').addEventListener('click', toggleStyle);
-    document.querySelector('#btn__sorting__all').addEventListener('click', () => renderTodoList(todoList));
-    //document.querySelector('.btn__sort').addEventListener('click', () => buisnessLogic.sortingAList(todoList, radioInputs));
-    document.querySelector('.btn__sort').addEventListener('click', () => renderTodoList(listSorting()));
-    // TODO change a list that will be sorted out
-    document.querySelector('#btn__sorting__done').addEventListener('click', () => renderTodoList(buisnessLogic.filterDone(todoList)));
-    document.querySelector('#btn__sorting__todo').addEventListener('click', () => renderTodoList(buisnessLogic.filterTodo(todoList)));
+    document.querySelector('#btn__sorting__all').addEventListener('click', async() => {
+        const list = await getTodoList();
+        actuallyDisplayedList = list;
+        renderOrders(list);
+    });
+    //document.querySelector('.btn__sort').addEventListener('click', () => renderOrders(listSorting()));
+    document.querySelector('.btn__sort').addEventListener('click', () => {
+        console.log(listSorting());
+        renderOrders(listSorting());
+    });
+    document.querySelector('#btn__sorting__done').addEventListener('click', async() => {
+        const list = await getTodoList();
+        actuallyDisplayedList = buisnessLogic.filterDone(list);
+        renderOrders(buisnessLogic.filterDone(list));
+    });
+    document.querySelector('#btn__sorting__todo').addEventListener('click', async() => {
+        const list = await getTodoList();
+        actuallyDisplayedList = buisnessLogic.filterTodo(list);
+        renderOrders(buisnessLogic.filterTodo(list));
+    });
 }
 // it is not working
 // for sure logg out
@@ -58,7 +74,7 @@ function listSorting() {
     const sortFormHTMLCollection = Array.from(document.querySelector('.sorting_options__radio').children);
     const radioInputs = [];
     sortFormHTMLCollection.filter((item) => item.localName === "label").forEach((item) => radioInputs.push(...item.children));
-    return buisnessLogic.sortingAList(todoList, radioInputs)
+    return buisnessLogic.sortingAList(actuallyDisplayedList, radioInputs);
 }
 function renderTodoList(list) {
     //reading the templates
@@ -78,20 +94,21 @@ function renderTodoList(list) {
 //const appContainer = document.querySelector('.form__list__container');
 //const ordersRenderer = Handlebars.compile(document.querySelector("#entry-template").innerHTML);
 async function getTodoList() {
-
+    const list = await orderService.getOrders();
+    return list;
 }
-async function renderOrders() {
-    // dostalam sie do informacji z serwera
-    // TO JEST ARRAY OBIEKTOW [{}, {}, {}]
-     const order = await orderService.getOrders()
-     console.log(order)
-
+//async function renderOrders() {
+ function renderOrders(list) {
+    // loguje liste z serwera
+    // const order = await orderService.getOrders();
+    // console.log(order);
     const templateSource = document.querySelector("#entry-template").innerHTML;
     const template = Handlebars.compile(templateSource);
     const ulTodoList = document.createElement('ul');
     ulTodoList.setAttribute('class', 'list__container');
     // 
-    ulTodoList.innerHTML = template({ orders: await orderService.getOrders() });
+    ulTodoList.innerHTML = template(list);
+    //ulTodoList.innerHTML = template(await orderService.getOrders() );
     //ulTodoList.addEventListener('click', (e) => editTask(e));
     const appContainer = document.querySelector('.form__list__container');
     appContainer.innerHTML = '';
@@ -168,7 +185,9 @@ function renderForm() {
         console.log(inputDone);
         */
         await orderService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone )
-        renderOrders();
+        let list = await getTodoList();
+        actuallyDisplayedList = list;
+        renderOrders(list);
         inputTitle.value = '';
     });
 }
