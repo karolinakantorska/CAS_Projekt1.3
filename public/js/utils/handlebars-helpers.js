@@ -1,3 +1,6 @@
+Handlebars.registerHelper('numberToStar',function(options){
+    return options.fn(this);
+})
 Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
 
     switch (operator) {
@@ -25,7 +28,7 @@ Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
             return options.inverse(this);
     }
 });
-// add my helper for the stars
+/*
 Handlebars.registerHelper('formatDate', function (data) {
     let options = {
         year: 'numeric', month: 'numeric', day: 'numeric',
@@ -34,3 +37,4 @@ Handlebars.registerHelper('formatDate', function (data) {
     };
     return new Date(data).toLocaleString('de-DE', options); //ES6
 });
+*/

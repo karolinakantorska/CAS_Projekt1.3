@@ -21,7 +21,6 @@ function initEventListenersInMenu() {
         renderOrders(list);
     });
     document.querySelector('.btn__sort').addEventListener('click', () => {
-        console.log(listSorting());
         renderOrders(listSorting());
     });
     document.querySelector('#btn__sorting__done').addEventListener('click', async() => {
@@ -72,20 +71,10 @@ function listSorting() {
     sortFormHTMLCollection.filter((item) => item.localName === "label").forEach((item) => radioInputs.push(...item.children));
     return buisnessLogic.sortingAList(actuallyDisplayedList, radioInputs);
 }
-function renderTodoList(list) {
-    const ulTodoList = document.createElement('ul');
-    ulTodoList.setAttribute('class', 'list__container');
-    ulTodoList.innerHTML = template(list);
-    ulTodoList.addEventListener('click', (e) => editTask(e));
-    const appContainer = document.querySelector('.form__list__container');
-    appContainer.innerHTML = '';
-    appContainer.appendChild(ulTodoList);
-}
 async function getTodoList() {
     const list = await orderService.getOrders();
     return list;
 }
-
  function renderOrders(list) {
     // loguje liste z serwera
     // const order = await orderService.getOrders();
@@ -103,17 +92,23 @@ async function getTodoList() {
 async function editTask() {
     const liChildrenNodes = event.target.parentElement.children;
     const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
-    await renderForm();
-    console.log(document.querySelector('.title'));
-    const defalutValuesObject = await orderService.getOrder(id);
-    console.log(defalutValuesObject);
+    renderForm();
+    const defalutValues = await orderService.getOrder(id);
+    console.log(id);
+    await orderService.deleteOrder(id);
+    (defalutValues.done)
+        ? document.querySelector('.inputDone').checked=true
+        : null;
+    document.querySelector('.inputTitle').setAttribute('value', `${defalutValues.title}`);
+    document.querySelector('.inputDescription').setAttribute('placeholder', `${defalutValues.description}`);
+    document.querySelector('.start').setAttribute('value', `${defalutValues.start}`);
+    document.querySelector('.finish').setAttribute('value', `${defalutValues.finish}`);
+    const inputCloseBtn = document.querySelector('.btn_task_input_close');
+    const stars = Array.from(document.querySelectorAll('.rating-star')).splice(0, defalutValues.importance);
+    for (let star of stars ) {
+            star.classList.add('full');
+    }
     
-    document.querySelector('.title').setAttribute('value', `${defalutValuesObject.title}`);
-    document.querySelector('.description').setAttribute('valuet', `${defalutValuesObject.description}`);
-    document.querySelector('.start').setAttribute('value', `${defalutValuesObject.start}`);
-    document.querySelector('.finish').setAttribute('value', `${defalutValuesObject.finish}`);
-    //notesStorage.deleteNodeByID(id);
-    controllerAction();
 }
 async function renderForm() {
     //reading the templates
@@ -133,21 +128,22 @@ async function renderForm() {
     const submitBtn = document.querySelector('.btn_task_input');
     starBtn.addEventListener('click', handleStairRating);
     // creating a todo
-    submitBtn.addEventListener('click', async event => {
-        event.preventDefault();
-        const inputTitle = document.querySelector('.inputTitle');
-        const inputDescription = document.querySelector('.inputDescription');
-        const inputStart = document.querySelector('.start');
-        const inputFinish = document.querySelector('.finish');
-        const inputDone = document.querySelector('.inputDone').checked;
-        const inputImportance = document.querySelectorAll('.full').length;
+    submitBtn.addEventListener('click', handleFormInput);
+}
+async function handleFormInput(){
+    event.preventDefault();
+    const inputTitle = document.querySelector('.inputTitle');
+    const inputDescription = document.querySelector('.inputDescription');
+    const inputStart = document.querySelector('.start');
+    const inputFinish = document.querySelector('.finish');
+    const inputDone = document.querySelector('.inputDone').checked;
+    const inputImportance = document.querySelectorAll('.full').length;
 
-        await orderService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone )
-        let list = await getTodoList();
-        actuallyDisplayedList = list;
-        renderOrders(list);
-        inputTitle.value = '';
-    });
+    await orderService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone)
+    let list = await getTodoList();
+    actuallyDisplayedList = list;
+    renderOrders(list);
+    inputTitle.value = '';
 }
 function toggleStyle() {
     const cssVariant = document.querySelector('.link_css');

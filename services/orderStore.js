@@ -9,7 +9,6 @@ export class Order {
         this.finish = finish;
         this.importance = importance;
         this.done = done;
-        this.orderDate = new Date();
     }
 }
 
@@ -22,9 +21,10 @@ export class OrderStore {
         let order = new Order(title, description, start, finish, importance, done, orderedBy);
         return await this.db.insert(order);
     }
-
+    // ASK how to relly delete 
     async delete(id, currentUser) {
-        await this.db.update({ _id: id, orderedBy: currentUser }, { $set: { "state": "DELETED" } });
+        // await this.db.update({ _id: id, orderedBy: currentUser }, { $set: { "state": "DELETED" } });
+        await this.db.remove({ _id: id, orderedBy: currentUser }, {});
         return await this.get(id);
     }
 
@@ -33,7 +33,7 @@ export class OrderStore {
     }
 
     async all(currentUser) {
-        return await this.db.cfind({ orderedBy: currentUser }).sort({ orderDate: -1 }).exec();
+        return await this.db.cfind({ orderedBy: currentUser }).exec();
     }
 }
 
