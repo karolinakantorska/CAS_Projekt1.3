@@ -1,8 +1,8 @@
 import { httpService } from './http-service.js'
 
 class TodoService {
-    async createPizza(pizzaName, description, start, finish, importance, done) {
-        return await httpService.ajax("POST", "/todos/", { name: pizzaName, description, start, finish, importance, done });
+    async createTodo(title, description, start, finish, importance, done) {
+        return await httpService.ajax("POST", "/todos/", { title, description, start, finish, importance, done });
     }
 
     async getTodos() {

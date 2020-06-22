@@ -1,8 +1,8 @@
-import { BuisnessLogic } from './shared-bl.js'
+import { BuisnessLogic } from '../bl/shared-bl.js'
 //import { NotesStorage } from './notes-storage.js'
 
 import { authService } from '../services/auth-service.js'
-import { todoService } from './services/todo-service.js'
+import { todoService } from '../services/todo-service.js'
 
 //const notesStorage = new NotesStorage();
 //const buisnessLogic = new BuisnessLogic(notesStorage);
@@ -11,32 +11,32 @@ let actuallyDisplayedList = [];
 const btnLogin = document.querySelector(".loggIn");
 
 function initEventListenersInMenu() {
-    btnLogin.addEventListener('click',logToggle);
+    btnLogin.addEventListener('click', logToggle);
     document.querySelector('.link__add').addEventListener('click', renderForm);
     document.querySelector('.btn__add').addEventListener('click', renderForm);
     document.querySelector('.disp-style').addEventListener('click', toggleStyle);
-    document.querySelector('#btn__sorting__all').addEventListener('click', async() => {
+    document.querySelector('#btn__sorting__all').addEventListener('click', async () => {
         // TODO Repetition to avoid
         const list = await getTodoList();
         actuallyDisplayedList = list;
-        renderTodos(list);
+        renderTodoList(list);
     });
     document.querySelector('.btn__sort').addEventListener('click', () => {
-        renderTodos(listSorting());
+        renderTodoList(listSorting());
     });
-    document.querySelector('#btn__sorting__done').addEventListener('click', async() => {
+    document.querySelector('#btn__sorting__done').addEventListener('click', async () => {
         const list = await getTodoList();
         actuallyDisplayedList = buisnessLogic.filterDone(list);
-        renderTodos(buisnessLogic.filterDone(list));
+        renderTodoList(buisnessLogic.filterDone(list));
     });
-    document.querySelector('#btn__sorting__todo').addEventListener('click', async() => {
+    document.querySelector('#btn__sorting__todo').addEventListener('click', async () => {
         const list = await getTodoList();
         actuallyDisplayedList = buisnessLogic.filterTodo(list);
-        renderTodos(buisnessLogic.filterTodo(list));
+        renderTodoList(buisnessLogic.filterTodo(list));
     });
 }
 // logg out is not working
-async function logToggle(){
+async function logToggle() {
     if (btnLogin.id === 'logedOut') {
         btnLogin.innerHTML = 'Log Out';
         btnLogin.setAttribute('id', 'logedIn');
@@ -66,9 +66,9 @@ async function getTodoList() {
     const list = await todoService.getTodos();
     return list;
 }
- function renderTodos(list) {
-    // const todo = await todoService.getTodos();
-    // console.log(todo);
+function renderTodoList(list) {
+    // const todoes = await todoService.getTodos();
+    // console.log(todoes);
     const templateSource = document.querySelector("#entry-template").innerHTML;
     const template = Handlebars.compile(templateSource);
     const appContainer = document.querySelector('.form__list__container');
@@ -76,9 +76,9 @@ async function getTodoList() {
     addRandomColorsToBackground()
     document.querySelector('.list__container').addEventListener('click', (e) => editTask(e));
 }
-function addRandomColorsToBackground(){
+function addRandomColorsToBackground() {
     if (document.querySelector('.link_css').className.includes('funny')) {
-        const backgroungColors = ['rgb(68,92,116)','rgb(88,112,136)', 'rgb(255,229,229)', 'rgb(255,215,203)', 'rgb(234,236,239)', 'rgb(255,153,153)'];
+        const backgroungColors = ['rgb(68,92,116)', 'rgb(88,112,136)', 'rgb(255,229,229)', 'rgb(255,215,203)', 'rgb(234,236,239)', 'rgb(255,153,153)'];
         Array.from(document.querySelectorAll('.list__item')).forEach(todo => {
             const color = backgroungColors[Math.floor(Math.random() * backgroungColors.length)];
             todo.setAttribute('style', `background-color: ${color};`);
@@ -86,11 +86,11 @@ function addRandomColorsToBackground(){
     }
 }
 async function editTask(e) {
-    if (e.target.className === 'edit'){
+    if (e.target.className === 'edit') {
         const liChildrenNodes = e.target.parentElement.children;
         const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
         renderForm();
-        const defalutValues = await todoService.getTodos();
+        const defalutValues = await todoService.getTodo(id);
         console.log(id);
         await todoService.deleteTodo(id);
         (defalutValues.done)
@@ -116,17 +116,17 @@ async function renderForm() {
     appContainer.innerHTML = templateInput();
     const starBtn = document.querySelector('.stair_rating');
     const inputCloseBtn = document.querySelector('.btn_task_input_close');
-    inputCloseBtn.addEventListener('click', async() => {
+    inputCloseBtn.addEventListener('click', async () => {
         // TODO Repetition to avoid
         const list = await getTodoList();
         actuallyDisplayedList = list;
-        renderTodos(list);
+        renderTodoList(list);
     });
     const submitBtn = document.querySelector('.btn_task_input');
     starBtn.addEventListener('click', handleStairRating);
     submitBtn.addEventListener('click', handleFormInput);
 }
-async function handleFormInput(){
+async function handleFormInput() {
     event.preventDefault();
     const inputTitle = document.querySelector('.inputTitle');
     const inputDescription = document.querySelector('.inputDescription');
@@ -135,10 +135,10 @@ async function handleFormInput(){
     const inputDone = document.querySelector('.inputDone').checked;
     const inputImportance = document.querySelectorAll('.full').length;
 
-    await todoService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone)
+    await todoService.createTodo(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone)
     let list = await getTodoList();
     actuallyDisplayedList = list;
-    renderTodos(list);
+    renderTodoList(list);
     inputTitle.value = '';
 }
 function toggleStyle() {

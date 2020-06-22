@@ -30,7 +30,7 @@ app.get("/", function (req, res) {
 
 app.use("/", indexRoutes);
 app.use(jwt(app.get("jwt-validate"))); //after this middleware a token is required!
-app.use("/todoes", todoRoutes);
+app.use("/todos", todoRoutes);
 
 
 app.use(function (err, req, res, next) {

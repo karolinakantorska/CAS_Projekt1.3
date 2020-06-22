@@ -4,7 +4,7 @@ export class Todo {
     constructor(title, description, start, finish, importance, done, orderedBy) {
         this.orderedBy = orderedBy;
         this.title = title;
-        this.description= description;
+        this.description = description;
         this.start = start;
         this.finish = finish;
         this.importance = importance;
@@ -14,16 +14,15 @@ export class Todo {
 
 export class TodoStore {
     constructor(db) {
-        this.db = db || new Datastore({ filename: './data/todoes.db', autoload: true });
+        this.db = db || new Datastore({ filename: './data/todos.db', autoload: true });
     }
 
     async add(title, description, start, finish, importance, done, orderedBy) {
-        let todo = new Todo(title, description, start, finish, importance, done, todoedBy);
+        let todo = new Todo(title, description, start, finish, importance, done, orderedBy);
         return await this.db.insert(todo);
     }
     // ASK how to relly delete 
     async delete(id, currentUser) {
-        // await this.db.update({ _id: id, orderedBy: currentUser }, { $set: { "state": "DELETED" } });
         await this.db.remove({ _id: id, orderedBy: currentUser }, {});
         return await this.get(id);
     }
