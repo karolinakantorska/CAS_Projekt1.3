@@ -1,3 +1,4 @@
+/*
 import { authService } from '../services/auth-service.js'
 import { orderService } from '../services/order-service.js'
 
@@ -21,3 +22,4 @@ orderContainer.addEventListener("click", async event => {
 });
 
 renderOrder();
+*/

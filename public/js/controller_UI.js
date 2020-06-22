@@ -1,11 +1,12 @@
 import { BuisnessLogic } from './shared-bl.js'
-import { NotesStorage } from './notes-storage.js'
+//import { NotesStorage } from './notes-storage.js'
 
-import { authService } from './services/auth-service.js'
-import { orderService } from './services/order-service.js'
+import { authService } from '../services/auth-service.js'
+import { todoService } from './services/todo-service.js'
 
-const notesStorage = new NotesStorage();
-const buisnessLogic = new BuisnessLogic(notesStorage);
+//const notesStorage = new NotesStorage();
+//const buisnessLogic = new BuisnessLogic(notesStorage);
+const buisnessLogic = new BuisnessLogic();
 let actuallyDisplayedList = [];
 const btnLogin = document.querySelector(".loggIn");
 
@@ -18,20 +19,20 @@ function initEventListenersInMenu() {
         // TODO Repetition to avoid
         const list = await getTodoList();
         actuallyDisplayedList = list;
-        renderOrders(list);
+        renderTodos(list);
     });
     document.querySelector('.btn__sort').addEventListener('click', () => {
-        renderOrders(listSorting());
+        renderTodos(listSorting());
     });
     document.querySelector('#btn__sorting__done').addEventListener('click', async() => {
         const list = await getTodoList();
         actuallyDisplayedList = buisnessLogic.filterDone(list);
-        renderOrders(buisnessLogic.filterDone(list));
+        renderTodos(buisnessLogic.filterDone(list));
     });
     document.querySelector('#btn__sorting__todo').addEventListener('click', async() => {
         const list = await getTodoList();
         actuallyDisplayedList = buisnessLogic.filterTodo(list);
-        renderOrders(buisnessLogic.filterTodo(list));
+        renderTodos(buisnessLogic.filterTodo(list));
     });
 }
 // logg out is not working
@@ -62,12 +63,12 @@ function listSorting() {
     return buisnessLogic.sortingAList(actuallyDisplayedList, radioInputs);
 }
 async function getTodoList() {
-    const list = await orderService.getOrders();
+    const list = await todoService.getTodos();
     return list;
 }
- function renderOrders(list) {
-    // const order = await orderService.getOrders();
-    // console.log(order);
+ function renderTodos(list) {
+    // const todo = await todoService.getTodos();
+    // console.log(todo);
     const templateSource = document.querySelector("#entry-template").innerHTML;
     const template = Handlebars.compile(templateSource);
     const appContainer = document.querySelector('.form__list__container');
@@ -89,9 +90,9 @@ async function editTask(e) {
         const liChildrenNodes = e.target.parentElement.children;
         const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
         renderForm();
-        const defalutValues = await orderService.getOrder(id);
+        const defalutValues = await todoService.getTodos();
         console.log(id);
-        await orderService.deleteOrder(id);
+        await todoService.deleteTodo(id);
         (defalutValues.done)
             ? document.querySelector('.inputDone').checked = true
             : null;
@@ -119,7 +120,7 @@ async function renderForm() {
         // TODO Repetition to avoid
         const list = await getTodoList();
         actuallyDisplayedList = list;
-        renderOrders(list);
+        renderTodos(list);
     });
     const submitBtn = document.querySelector('.btn_task_input');
     starBtn.addEventListener('click', handleStairRating);
@@ -134,10 +135,10 @@ async function handleFormInput(){
     const inputDone = document.querySelector('.inputDone').checked;
     const inputImportance = document.querySelectorAll('.full').length;
 
-    await orderService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone)
+    await todoService.createPizza(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone)
     let list = await getTodoList();
     actuallyDisplayedList = list;
-    renderOrders(list);
+    renderTodos(list);
     inputTitle.value = '';
 }
 function toggleStyle() {

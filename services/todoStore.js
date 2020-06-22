@@ -1,6 +1,6 @@
 import Datastore from 'nedb-promise'
-// goes to controller/ordersController
-export class Order {
+
+export class Todo {
     constructor(title, description, start, finish, importance, done, orderedBy) {
         this.orderedBy = orderedBy;
         this.title = title;
@@ -12,14 +12,14 @@ export class Order {
     }
 }
 
-export class OrderStore {
+export class TodoStore {
     constructor(db) {
-        this.db = db || new Datastore({ filename: './data/orders.db', autoload: true });
+        this.db = db || new Datastore({ filename: './data/todoes.db', autoload: true });
     }
 
     async add(title, description, start, finish, importance, done, orderedBy) {
-        let order = new Order(title, description, start, finish, importance, done, orderedBy);
-        return await this.db.insert(order);
+        let todo = new Todo(title, description, start, finish, importance, done, todoedBy);
+        return await this.db.insert(todo);
     }
     // ASK how to relly delete 
     async delete(id, currentUser) {
@@ -37,4 +37,4 @@ export class OrderStore {
     }
 }
 
-export const orderStore = new OrderStore();
+export const todoStore = new TodoStore();

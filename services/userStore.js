@@ -7,7 +7,6 @@ export class User {
         this.passwortHash = CryptoUtil.hashPwd(passwort);
     }
 }
-
 export class UserStore {
     constructor(db) {
         this.db = db || new Datastore({ filename: './data/user.db', autoload: true });

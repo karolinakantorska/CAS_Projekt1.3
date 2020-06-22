@@ -4,7 +4,7 @@ import path from 'path';
 import jwt from 'express-jwt';
 
 import { indexRoutes } from './routes/indexRoutes';
-import { orderRoutes } from './routes/orderRoutes';
+import { todoRoutes } from './routes/todoRoutes';
 
 const app = express();
 
@@ -30,7 +30,7 @@ app.get("/", function (req, res) {
 
 app.use("/", indexRoutes);
 app.use(jwt(app.get("jwt-validate"))); //after this middleware a token is required!
-app.use("/orders", orderRoutes);
+app.use("/todoes", todoRoutes);
 
 
 app.use(function (err, req, res, next) {

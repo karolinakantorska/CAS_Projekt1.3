@@ -1,7 +1,4 @@
-//Model
-//Model ----ondatachange----> Controller
-//Model <======== Controller
-//Data and business logic for the application
+/*
 export class NotesStorage {
     constructor() {
         const todoList = JSON.parse(localStorage.getItem('todoList')) || [];
@@ -23,3 +20,4 @@ export class NotesStorage {
         localStorage.setItem('todoList', JSON.stringify(this.todoList));
     }
 }
+*/
