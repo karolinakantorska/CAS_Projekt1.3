@@ -19,7 +19,8 @@ body {
     display: flex;
     flex-wrap: wrap;
 }
-.disp-style, .loggIn {
+.disp-style,
+.loggIn {
     flex-basis: 50%;
     font-size: var(--small-text);
 }
@@ -37,7 +38,7 @@ body {
     margin-top: 20px;
     background:
         linear-gradient(to left, rgba(255,255,255,0.5),rgba(255,255,255,0.9), rgba(255,0255,255,0.5)),
-        repeat-x  center/40% url("./06.jpg");
+        repeat-x  center/40% url("../images/06.jpg");
     margin: 0px auto 0px auto;
 }
 .link__add{
@@ -101,6 +102,8 @@ li:last-child {
     flex: 1 1 calc(30% - 10px);
 }
 .title{   
+    flex-basis: 100%;
+    text-align: center;
     font-size: 1.2em;
     min-height: 2.8em;
     margin-bottom: .4em;

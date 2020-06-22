@@ -1,40 +1,16 @@
-Handlebars.registerHelper('numberToStar',function(options){
-    return options.fn(this);
-})
-Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-
+Handlebars.registerHelper('numberToStar', function (operator){
     switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        case '!==':
-            return (v1 !== v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        case 0:
+            return new Handlebars.SafeString('<p class ="importance">&#9734; &#9734; &#9734; &#9734; &#9734;</p>');
+        case 1:
+            return new Handlebars.SafeString('<p class ="importance">&#9733; &#9734; &#9734; &#9734; &#9734;</p>');
+        case 2:
+            return new Handlebars.SafeString('<p class ="importance">&#9733; &#9733; &#9734; &#9734; &#9734;</p>');
+        case 3:
+            return new Handlebars.SafeString('<p class ="importance">&#9733; &#9733; &#9733; &#9734; &#9734;</p>');
+        case 4:
+            return new Handlebars.SafeString('<p class ="importance">&#9733; &#9733; &#9733; &#9733; &#9734;</p>');
         default:
-            return options.inverse(this);
+            return new Handlebars.SafeString('<p class ="importance">&#9733; &#9733; &#9733; &#9733; &#9733;</p>');
     }
-});
-/*
-Handlebars.registerHelper('formatDate', function (data) {
-    let options = {
-        year: 'numeric', month: 'numeric', day: 'numeric',
-        hour: 'numeric', minute: 'numeric', second: 'numeric',
-        hour12: true
-    };
-    return new Date(data).toLocaleString('de-DE', options); //ES6
-});
-*/
+})

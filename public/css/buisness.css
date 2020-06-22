@@ -22,8 +22,11 @@ p, h1{
 .disp-style {
     grid-area: disp_opt;
     justify-self: right;
-    font-size: 0.95rem;
     text-decoration: underline;
+}
+.disp-style,
+.loggIn {
+    font-size: 0.9rem;
 }
 .loggIn {
     grid-area: logg_in;
@@ -150,7 +153,7 @@ li {
 }
 .finish::before {
     font-size: 0.8rem;
-    content: 'Dedline: '
+    content: 'End: '
 }
 
 .importance {

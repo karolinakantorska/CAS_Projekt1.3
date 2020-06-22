@@ -7,7 +7,7 @@ import { orderService } from './services/order-service.js'
 const notesStorage = new NotesStorage();
 const buisnessLogic = new BuisnessLogic(notesStorage);
 let actuallyDisplayedList = [];
-const btnLogin = document.querySelector(".logIn");
+const btnLogin = document.querySelector(".loggIn");
 
 function initEventListenersInMenu() {
     btnLogin.addEventListener('click',logToggle);
@@ -55,16 +55,6 @@ async function logToggle(){
         //!authService.isLoggedIn();
     }
 }
-// nie rozumiem tego
-function updateStatus() {
-    Array.from(document.querySelectorAll(".js-non-user")).forEach(x => x.classList.toggle("hidden", authService.isLoggedIn()))
-    Array.from(document.querySelectorAll(".js-user")).forEach(x => x.classList.toggle("hidden", !authService.isLoggedIn()))
-    /*
-    if (authService.isLoggedIn()) {
-        renderOrders();
-    }
-    */
-}
 function listSorting() {
     const sortFormHTMLCollection = Array.from(document.querySelector('.sorting_options__radio').children);
     const radioInputs = [];
@@ -76,39 +66,45 @@ async function getTodoList() {
     return list;
 }
  function renderOrders(list) {
-    // loguje liste z serwera
     // const order = await orderService.getOrders();
     // console.log(order);
     const templateSource = document.querySelector("#entry-template").innerHTML;
     const template = Handlebars.compile(templateSource);
-    const ulTodoList = document.createElement('ul');
-    ulTodoList.setAttribute('class', 'list__container');
-    ulTodoList.innerHTML = template(list);
-    ulTodoList.addEventListener('click', (e) => editTask(e));
     const appContainer = document.querySelector('.form__list__container');
-    appContainer.innerHTML = '';
-    appContainer.appendChild(ulTodoList);
+    appContainer.innerHTML = template(list);
+    addRandomColorsToBackground()
+    document.querySelector('.list__container').addEventListener('click', (e) => editTask(e));
 }
-async function editTask() {
-    const liChildrenNodes = event.target.parentElement.children;
-    const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
-    renderForm();
-    const defalutValues = await orderService.getOrder(id);
-    console.log(id);
-    await orderService.deleteOrder(id);
-    (defalutValues.done)
-        ? document.querySelector('.inputDone').checked=true
-        : null;
-    document.querySelector('.inputTitle').setAttribute('value', `${defalutValues.title}`);
-    document.querySelector('.inputDescription').setAttribute('placeholder', `${defalutValues.description}`);
-    document.querySelector('.start').setAttribute('value', `${defalutValues.start}`);
-    document.querySelector('.finish').setAttribute('value', `${defalutValues.finish}`);
-    const inputCloseBtn = document.querySelector('.btn_task_input_close');
-    const stars = Array.from(document.querySelectorAll('.rating-star')).splice(0, defalutValues.importance);
-    for (let star of stars ) {
-            star.classList.add('full');
+function addRandomColorsToBackground(){
+    if (document.querySelector('.link_css').className.includes('funny')) {
+        const backgroungColors = ['rgb(68,92,116)','rgb(88,112,136)', 'rgb(255,229,229)', 'rgb(255,215,203)', 'rgb(234,236,239)', 'rgb(255,153,153)'];
+        Array.from(document.querySelectorAll('.list__item')).forEach(todo => {
+            const color = backgroungColors[Math.floor(Math.random() * backgroungColors.length)];
+            todo.setAttribute('style', `background-color: ${color};`);
+        });
     }
-    
+}
+async function editTask(e) {
+    if (e.target.className === 'edit'){
+        const liChildrenNodes = e.target.parentElement.children;
+        const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
+        renderForm();
+        const defalutValues = await orderService.getOrder(id);
+        console.log(id);
+        await orderService.deleteOrder(id);
+        (defalutValues.done)
+            ? document.querySelector('.inputDone').checked = true
+            : null;
+        document.querySelector('.inputTitle').setAttribute('value', `${defalutValues.title}`);
+        document.querySelector('.inputDescription').setAttribute('placeholder', `${defalutValues.description}`);
+        document.querySelector('.start').setAttribute('value', `${defalutValues.start}`);
+        document.querySelector('.finish').setAttribute('value', `${defalutValues.finish}`);
+        const inputCloseBtn = document.querySelector('.btn_task_input_close');
+        const stars = Array.from(document.querySelectorAll('.rating-star')).splice(0, defalutValues.importance);
+        for (let star of stars) {
+            star.classList.add('full');
+        }
+    }
 }
 async function renderForm() {
     //reading the templates
@@ -127,7 +123,6 @@ async function renderForm() {
     });
     const submitBtn = document.querySelector('.btn_task_input');
     starBtn.addEventListener('click', handleStairRating);
-    // creating a todo
     submitBtn.addEventListener('click', handleFormInput);
 }
 async function handleFormInput(){
@@ -149,11 +144,17 @@ function toggleStyle() {
     const cssVariant = document.querySelector('.link_css');
     if (/funny/.test(cssVariant.href)) {
         cssVariant.href = '../css/buisness.css';
-        document.querySelector('.disp-style').innerHTML = 'Display: funny &#9662'
+        cssVariant.classList.toggle('funny');
+        document.querySelector('.disp-style').innerHTML = 'Display: funny &#9662';
+        console.log(document.querySelector('.link_css'));
+        (document.querySelector('.link_css'))
+            ? Array.from(document.querySelectorAll('.list__item')).forEach(todo => todo.setAttribute('style', 'background-color: white;'))
+            : null;
     }
     else {
         cssVariant.href = '../css/funny.css';
-        document.querySelector('.disp-style').innerHTML = 'Display: buisness &#9662'
+        cssVariant.classList.toggle('funny');
+        document.querySelector('.disp-style').innerHTML = 'Display: buisness &#9662';
     }
 }
 function handleStairRating() {
