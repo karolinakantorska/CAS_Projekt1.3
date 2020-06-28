@@ -11,7 +11,6 @@ export class Todo {
         this.done = done;
     }
 }
-
 export class TodoStore {
     constructor(db) {
         this.db = db || new Datastore({ filename: './data/todos.db', autoload: true });
@@ -21,7 +20,6 @@ export class TodoStore {
         let todo = new Todo(title, description, start, finish, importance, done, orderedBy);
         return await this.db.insert(todo);
     }
-    // ASK how to relly delete 
     async delete(id, currentUser) {
         await this.db.remove({ _id: id, orderedBy: currentUser }, {});
         return await this.get(id);

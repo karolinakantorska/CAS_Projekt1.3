@@ -48,31 +48,39 @@
             <input class='btn_task_input_close' type="button" value="&#9747;">
             </span>
             <span class="title_span">
-                <label for="title">Task title: </label>
-                <input type="text" name="title" class="inputTitle" required>
+                <label for="title">Task title:</label>
+                <input type="text" name="title" class="inputTitle" value = {{title}}>
             </span>
             <span class="description_span">
                 <label for="description">Description: </label>
-                <textarea type="text" name="description" class="inputDescription"></textarea>
+                <textarea type="text" name="description" class="inputDescription" placeholder={{description}}></textarea>
             </span>
             <span>
-                <input type="radio" class="inputTodo" name="inputTodo" checked>
+                <input type="radio" class="inputTodo" name="inputTodo" >
                 <label>Todo</label>
-                <input type="radio" class="inputDone" name="inputTodo">
+                <input 
+                    type="radio" 
+                    class="inputDone" 
+                    name="inputTodo"
+                    {{#if done}}
+                    checked="true"
+                    {{/if}}
+                >
                 <label>Done</label>
             </span>
             <span class="date_span">
-                <label class="date_label1" for="start">Start date:<input type="date" class="start" name="inputStart"></label>
-                <label class="date_label2" for="finish">Finish date:<input type="date" class="finish"
-                        name="inputFinish"></label>
+                <label class="date_label1" for="start" >Start date:
+                    <input type="date" class="start" name="inputStart" value = {{start}}>
+                </label>
+                <label class="date_label2" for="finish" >Finish date:
+                    <input type="date" class="finish" name="inputFinish" value = {{finish}}>
+                </label>
             </span>
             <span class="stair_rating">
                 <label>Importance:</label>
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
+                {{#classForStars importance}}
+                {{body}}
+                {{/classForStars}}
             </span>
             <input class='btn_task_input' type="button" value="Add Task">
         </form>
@@ -82,7 +90,8 @@
     <div class="container">
             <!-- Navigation-->
             <span class="nav__container">
-                <p class="loggIn" id = "logedOut">Logg in</p>
+                <p class="btn btn-default js-non-user" id="login">Logg in</p>
+                <p class="btn btn-default js-user" id="logout">Logg out</p>
                 <p class="disp-style">Display: buisness &#9662</p>
                 <p class="logo"> Todo List</p>
                 <p class="link__add" >Add +</p>
@@ -98,23 +107,16 @@
             
                 <form class="sorting_options__radio">
                     <p class="sorting_options__p">Sort By:</p>
-                    <label>finish date
                         <input type="radio" value="finish" name="sort_radio"></input>
-                    </label>
-                    <label>create date
+                    <label>finish date</label>
                         <input type="radio" value="start" name="sort_radio"></input>
-                    </label>
-                    <label>importance
+                    <label>create date</label>
                         <input type="radio" value="importance" name="sort_radio"></input>
-                    </label>
-                    <input class="btn__sort" type="button" value="Sort"></input>
+                    <label>importance</label>
                 </form>
             </span>
             <div class="form__list__container" >
-                <!-- TODO List-->
-                <!-- ADD TODO Form-->
-                <!-- TODO add in css a description for a list -->
-                <!-- TODO whole line in buisness -->
+
             </div>
     </div>
 </body>

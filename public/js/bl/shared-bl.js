@@ -10,27 +10,8 @@ export class BuisnessLogic {
     filterTodo(list) {
         return list.filter((task) => !task.done);
     }
-    sortingAList(list, sortInput) {
-        let value = ''
-        for (const node of sortInput) {
-            (node.checked)
-                ? value = node.value
-                : null;
-        }
-        switch (value) {
-            case 'finish':
-                console.log(`${value}`)
-                return this.sortTasksBy(list, value);
-                break;
-            case 'start':
-                console.log(`${value}`)
-                return this.sortTasksBy(list, value);
-                break;
-            case 'importance':
-                console.log(`${value}`)
-                return this.sortTasksBy(list, value);
-                break;
-        }
+    sortingAList(list, sortBy) {
+        return this.sortTasksBy(list, sortBy);
     }
     sortTasksBy(list, by) {
         return [...list].sort(function (t1, t2) {

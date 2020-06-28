@@ -1,76 +1,63 @@
 import { BuisnessLogic } from '../bl/shared-bl.js'
-//import { NotesStorage } from './notes-storage.js'
-
 import { authService } from '../services/auth-service.js'
 import { todoService } from '../services/todo-service.js'
 
-//const notesStorage = new NotesStorage();
-//const buisnessLogic = new BuisnessLogic(notesStorage);
 const buisnessLogic = new BuisnessLogic();
-let actuallyDisplayedList = [];
-const btnLogin = document.querySelector(".loggIn");
+let displayedList = [];
+const btnLogin = document.querySelector("#login");
+const btnLogout = document.querySelector("#logout");
 
+btnLogin.addEventListener("click", async () => {
+    await authService.login("admin@admin.ch", "123456");
+    updateStatus();
+});
+btnLogout.addEventListener("click", () => {
+    authService.logout();
+    updateStatus();
+});
+function updateStatus() {
+    Array.from(document.querySelectorAll(".js-non-user")).forEach(x => x.classList.toggle("hidden", authService.isLoggedIn()))
+    Array.from(document.querySelectorAll(".js-user")).forEach(x => x.classList.toggle("hidden", !authService.isLoggedIn()))
+}
 function initEventListenersInMenu() {
-    btnLogin.addEventListener('click', logToggle);
     document.querySelector('.link__add').addEventListener('click', renderForm);
     document.querySelector('.btn__add').addEventListener('click', renderForm);
     document.querySelector('.disp-style').addEventListener('click', toggleStyle);
     document.querySelector('#btn__sorting__all').addEventListener('click', async () => {
-        // TODO Repetition to avoid
-        const list = await getTodoList();
-        actuallyDisplayedList = list;
-        renderTodoList(list);
+        resetChecked();
+        renderTodoList(await getTodoList());
     });
-    document.querySelector('.btn__sort').addEventListener('click', () => {
-        renderTodoList(listSorting());
-    });
+    const radioBtn = Array.from(document.querySelectorAll('.sorting_options__radio > input'));
+    radioBtn.forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            renderTodoList(listSorting( e.target.value));
+        })
+    })
     document.querySelector('#btn__sorting__done').addEventListener('click', async () => {
-        const list = await getTodoList();
-        actuallyDisplayedList = buisnessLogic.filterDone(list);
-        renderTodoList(buisnessLogic.filterDone(list));
+        resetChecked();
+        displayedList = buisnessLogic.filterDone(await getTodoList());
+        renderTodoList(buisnessLogic.filterDone(displayedList));
     });
     document.querySelector('#btn__sorting__todo').addEventListener('click', async () => {
-        const list = await getTodoList();
-        actuallyDisplayedList = buisnessLogic.filterTodo(list);
-        renderTodoList(buisnessLogic.filterTodo(list));
+        resetChecked();
+        displayedList = buisnessLogic.filterTodo(await getTodoList());
+        renderTodoList(buisnessLogic.filterTodo(displayedList));
     });
 }
-// logg out is not working
-async function logToggle() {
-    if (btnLogin.id === 'logedOut') {
-        btnLogin.innerHTML = 'Log Out';
-        btnLogin.setAttribute('id', 'logedIn');
-        await authService.login("admin@admin.ch", "123456");
-        // true
-        console.log(authService.isLoggedIn())
-        //authService.isLoggedIn();
-    }
-    else {
-        btnLogin.innerHTML = 'Log In';
-        btnLogin.setAttribute('id', 'logedOut');
-        // false
-        console.log(!authService.isLoggedIn())
-        // empty object
-        console.log(authService)
-        authService.logout();
-        //!authService.isLoggedIn();
-    }
+function resetChecked(){
+    const radioBtn = Array.from(document.querySelectorAll('.sorting_options__radio > input'));
+    radioBtn.forEach(radio => radio.checked = false);
 }
-function listSorting() {
-    const sortFormHTMLCollection = Array.from(document.querySelector('.sorting_options__radio').children);
-    const radioInputs = [];
-    sortFormHTMLCollection.filter((item) => item.localName === "label").forEach((item) => radioInputs.push(...item.children));
-    return buisnessLogic.sortingAList(actuallyDisplayedList, radioInputs);
+function listSorting(sortBy) {
+    return buisnessLogic.sortingAList(displayedList, sortBy);
 }
 async function getTodoList() {
     const list = await todoService.getTodos();
+    displayedList = list;
     return list;
 }
 function renderTodoList(list) {
-    // const todoes = await todoService.getTodos();
-    // console.log(todoes);
-    const templateSource = document.querySelector("#entry-template").innerHTML;
-    const template = Handlebars.compile(templateSource);
+    const template = Handlebars.compile(document.querySelector("#entry-template").innerHTML);
     const appContainer = document.querySelector('.form__list__container');
     appContainer.innerHTML = template(list);
     addRandomColorsToBackground()
@@ -78,10 +65,10 @@ function renderTodoList(list) {
 }
 function addRandomColorsToBackground() {
     if (document.querySelector('.link_css').className.includes('funny')) {
-        const backgroungColors = ['rgb(68,92,116)', 'rgb(88,112,136)', 'rgb(255,229,229)', 'rgb(255,215,203)', 'rgb(234,236,239)', 'rgb(255,153,153)'];
+        const backgroungColors = ['bgColor1', 'bgColor2', 'bgColor3)', 'bgColor4', 'bgColor5', 'bgColor6'];
         Array.from(document.querySelectorAll('.list__item')).forEach(todo => {
             const color = backgroungColors[Math.floor(Math.random() * backgroungColors.length)];
-            todo.setAttribute('style', `background-color: ${color};`);
+            todo.className= color;
         });
     }
 }
@@ -89,38 +76,30 @@ async function editTask(e) {
     if (e.target.className === 'edit') {
         const liChildrenNodes = e.target.parentElement.children;
         const id = Object.values(liChildrenNodes).find((child) => child.className.includes('id')).innerText;
-        renderForm();
         const defalutValues = await todoService.getTodo(id);
-        console.log(id);
+        console.log(defalutValues)
+        renderForm(defalutValues);
         await todoService.deleteTodo(id);
+        // TODO template helpers
+        /*
         (defalutValues.done)
             ? document.querySelector('.inputDone').checked = true
             : null;
-        document.querySelector('.inputTitle').setAttribute('value', `${defalutValues.title}`);
-        document.querySelector('.inputDescription').setAttribute('placeholder', `${defalutValues.description}`);
-        document.querySelector('.start').setAttribute('value', `${defalutValues.start}`);
-        document.querySelector('.finish').setAttribute('value', `${defalutValues.finish}`);
-        const inputCloseBtn = document.querySelector('.btn_task_input_close');
         const stars = Array.from(document.querySelectorAll('.rating-star')).splice(0, defalutValues.importance);
         for (let star of stars) {
             star.classList.add('full');
         }
+        */
     }
 }
-async function renderForm() {
-    //reading the templates
-    const templateSourceInput = document.querySelector("#input-template").innerHTML;
-    // compiling template string into template function
-    const templateInput = Handlebars.compile(templateSourceInput);
+async function renderForm(defaultObject) {
+    const templateInput = Handlebars.compile(document.querySelector("#input-template").innerHTML);
     const appContainer = document.querySelector('.form__list__container');
-    appContainer.innerHTML = templateInput();
+    appContainer.innerHTML = templateInput(defaultObject);
     const starBtn = document.querySelector('.stair_rating');
     const inputCloseBtn = document.querySelector('.btn_task_input_close');
     inputCloseBtn.addEventListener('click', async () => {
-        // TODO Repetition to avoid
-        const list = await getTodoList();
-        actuallyDisplayedList = list;
-        renderTodoList(list);
+        renderTodoList(await getTodoList());
     });
     const submitBtn = document.querySelector('.btn_task_input');
     starBtn.addEventListener('click', handleStairRating);
@@ -136,9 +115,7 @@ async function handleFormInput() {
     const inputImportance = document.querySelectorAll('.full').length;
 
     await todoService.createTodo(inputTitle.value, inputDescription.value, inputStart.value, inputFinish.value, inputImportance, inputDone)
-    let list = await getTodoList();
-    actuallyDisplayedList = list;
-    renderTodoList(list);
+    renderTodoList(await getTodoList());
     inputTitle.value = '';
 }
 function toggleStyle() {
@@ -147,7 +124,6 @@ function toggleStyle() {
         cssVariant.href = '../css/buisness.css';
         cssVariant.classList.toggle('funny');
         document.querySelector('.disp-style').innerHTML = 'Display: funny &#9662';
-        console.log(document.querySelector('.link_css'));
         (document.querySelector('.link_css'))
             ? Array.from(document.querySelectorAll('.list__item')).forEach(todo => todo.setAttribute('style', 'background-color: white;'))
             : null;
@@ -155,6 +131,7 @@ function toggleStyle() {
     else {
         cssVariant.href = '../css/funny.css';
         cssVariant.classList.toggle('funny');
+        addRandomColorsToBackground();
         document.querySelector('.disp-style').innerHTML = 'Display: buisness &#9662';
     }
 }
@@ -173,4 +150,12 @@ function handleStairRating() {
         ? addClassToStars(event.target)
         : null;
 }
+updateStatus(); 
 initEventListenersInMenu();
+/*
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+                <span class="rating-star" role="button"></span>
+*/
