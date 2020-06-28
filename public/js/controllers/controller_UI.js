@@ -80,16 +80,6 @@ async function editTask(e) {
         console.log(defalutValues)
         renderForm(defalutValues);
         await todoService.deleteTodo(id);
-        // TODO template helpers
-        /*
-        (defalutValues.done)
-            ? document.querySelector('.inputDone').checked = true
-            : null;
-        const stars = Array.from(document.querySelectorAll('.rating-star')).splice(0, defalutValues.importance);
-        for (let star of stars) {
-            star.classList.add('full');
-        }
-        */
     }
 }
 async function renderForm(defaultObject) {
@@ -152,10 +142,3 @@ function handleStairRating() {
 }
 updateStatus(); 
 initEventListenersInMenu();
-/*
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
-                <span class="rating-star" role="button"></span>
-*/
